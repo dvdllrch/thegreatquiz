@@ -1,0 +1,514 @@
+:root {
+  --ink: #080808;
+  --paper: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+img {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+.intro {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.title-mark {
+  display: block;
+  width: min(64vw, 320px);
+  height: auto;
+  animation: title-sequence 3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.quiz {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--paper);
+  animation: stage-in 420ms ease-out both;
+}
+
+.quiz-meta {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 25px 32px;
+  pointer-events: none;
+}
+
+.quiz-meta p,
+.eyebrow,
+.prompt,
+.hint {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.quiz-stage {
+  display: grid;
+  min-height: 100svh;
+  grid-template-columns: minmax(190px, 1fr) minmax(280px, 520px) minmax(190px, 1fr);
+  align-items: center;
+  gap: clamp(18px, 4vw, 72px);
+  padding: 72px clamp(18px, 3.5vw, 64px) 34px;
+}
+
+.artist-choice {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-direction: column;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.artist-choice-john {
+  animation: portrait-left 800ms cubic-bezier(0.16, 1, 0.3, 1) 70ms both;
+}
+
+.artist-choice-kacey {
+  animation: portrait-right 800ms cubic-bezier(0.16, 1, 0.3, 1) 70ms both;
+}
+
+.portrait-wrap {
+  position: relative;
+  display: grid;
+  width: min(100%, 310px);
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.portrait-wrap::after {
+  position: absolute;
+  right: 8%;
+  bottom: 3%;
+  left: 8%;
+  height: 1px;
+  background: var(--ink);
+  content: "";
+  transform: scaleX(0.35);
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artist-choice img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(0.96);
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artist-name {
+  margin-top: 13px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  font-size: clamp(12px, 1vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease;
+}
+
+.artist-choice:hover .portrait-wrap::after,
+.artist-choice:focus-visible .portrait-wrap::after {
+  transform: scaleX(1);
+}
+
+.artist-choice:hover img,
+.artist-choice:focus-visible img {
+  transform: scale(1.025);
+}
+
+.artist-choice:hover .artist-name,
+.artist-choice:focus-visible .artist-name {
+  border-color: var(--ink);
+}
+
+.artist-choice:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 8px;
+}
+
+.artist-choice:disabled {
+  cursor: default;
+}
+
+.lyric-panel {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  animation: lyric-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.lyric-panel.is-changing {
+  opacity: 0;
+  transform: translateY(-9px);
+}
+
+.prompt {
+  margin-bottom: clamp(28px, 5vh, 52px);
+}
+
+.lyric-panel blockquote {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(31px, 4vw, 64px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+}
+
+.hint {
+  margin-top: clamp(30px, 5vh, 54px);
+  color: #777777;
+  font-size: 9px;
+}
+
+.load-state {
+  display: grid;
+  min-height: 100svh;
+  place-content: center;
+  gap: 20px;
+  padding: 30px;
+  text-align: center;
+}
+
+.load-state button,
+.play-again {
+  justify-self: start;
+  padding: 12px 0 8px;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.load-state button {
+  justify-self: center;
+}
+
+.result {
+  display: grid;
+  min-height: 100svh;
+  grid-template-columns: minmax(280px, 1fr) minmax(150px, 0.55fr);
+  align-items: center;
+  gap: clamp(60px, 10vw, 180px);
+  padding: clamp(40px, 8vw, 110px);
+  overflow: hidden;
+  background: var(--paper);
+  animation: stage-in 480ms ease both;
+}
+
+.result-copy {
+  max-width: 660px;
+}
+
+.result h1 {
+  max-width: 7ch;
+  margin: 22px 0 26px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(62px, 10vw, 150px);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+}
+
+.result-message {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 2vw, 29px);
+  line-height: 1.35;
+}
+
+.play-again {
+  margin-top: 46px;
+}
+
+.play-again:focus-visible,
+.load-state button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 6px;
+}
+
+.score-wrap {
+  position: relative;
+  width: min(110px, 22vw);
+  height: min(58svh, 520px);
+  justify-self: center;
+  animation: score-appear 700ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+}
+
+.score-track {
+  position: absolute;
+  inset: 0 12px;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.score-fill {
+  --score-height: 0%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0;
+  background: var(--ink);
+  transition: height 1600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.score-fill.is-filled {
+  height: var(--score-height);
+}
+
+.score-tick {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  width: 11px;
+  height: 1px;
+  background: var(--ink);
+  transform: translateY(50%);
+}
+
+.scale-label {
+  position: absolute;
+  right: 100%;
+  margin-right: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.scale-label-top {
+  top: 0;
+  transform: translateY(-35%);
+}
+
+.scale-label-bottom {
+  bottom: 0;
+  transform: translateY(35%);
+}
+
+@keyframes title-sequence {
+  0% {
+    opacity: 0;
+    transform: scale(0.91);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+}
+
+@keyframes stage-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes portrait-left {
+  from {
+    opacity: 0;
+    transform: translateX(-70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes portrait-right {
+  from {
+    opacity: 0;
+    transform: translateX(70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes lyric-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes score-appear {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 780px) {
+  .quiz-meta {
+    padding: 19px 18px;
+  }
+
+  .quiz-stage {
+    grid-template-areas:
+      "line line"
+      "john kacey";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(280px, 0.9fr) minmax(240px, 1.1fr);
+    gap: 10px 14px;
+    padding: 66px 14px 12px;
+  }
+
+  .artist-choice-john {
+    grid-area: john;
+  }
+
+  .artist-choice-kacey {
+    grid-area: kacey;
+  }
+
+  .lyric-panel {
+    grid-area: line;
+    align-self: end;
+    padding: 0 8px 30px;
+  }
+
+  .lyric-panel blockquote {
+    font-size: clamp(29px, 8.4vw, 46px);
+  }
+
+  .prompt {
+    margin-bottom: 20px;
+  }
+
+  .hint {
+    margin-top: 24px;
+  }
+
+  .portrait-wrap {
+    width: min(100%, 220px);
+  }
+
+  .artist-name {
+    max-width: 13ch;
+    margin-top: 3px;
+    font-size: 10px;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .result {
+    min-height: 100svh;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    padding: 44px 26px;
+  }
+
+  .result h1 {
+    margin-top: 16px;
+    font-size: clamp(54px, 17vw, 88px);
+  }
+
+  .score-wrap {
+    width: 72px;
+    height: min(55svh, 430px);
+  }
+}
+
+@media (max-width: 460px) {
+  .result {
+    grid-template-columns: minmax(0, 1fr) 68px;
+    align-items: end;
+    gap: 16px;
+    padding: 34px 18px;
+  }
+
+  .result h1 {
+    font-size: clamp(51px, 17vw, 76px);
+  }
+
+  .result-message {
+    font-size: 17px;
+  }
+
+  .score-wrap {
+    width: 58px;
+    height: 48svh;
+  }
+
+  .score-track {
+    right: 5px;
+    left: 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artist-choice,
+  .lyric-panel,
+  .result,
+  .score-wrap,
+  .quiz {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+
+  .score-fill {
+    transition-duration: 1ms;
+  }
+}
